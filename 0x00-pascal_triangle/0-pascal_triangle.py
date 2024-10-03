@@ -6,6 +6,7 @@ that represent Pascal's Triangle
 
 
 def pascal_triangle(n):
+    '''Implementation of Pascal's Triangle'''
     if n <= 0:
         return []
     triangle = []
