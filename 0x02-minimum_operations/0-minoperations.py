@@ -1,33 +1,24 @@
-#!/usr/bin/python3
-"""Minimum operations"""
+""" Module for 0-minoperations"""
 
 
-def minOperations(n) -> int:
-    """returns the minimum number of operations"""
-    if n <= 1 or type(n) != int:
+def minOperations(n):
+    """
+    minOperations
+    Gets fewest # of operations needed to result in exactly n H characters
+    """
+    # all outputs should be at least 2 char: (min, Copy All => Paste)
+    if (n < 2):
         return 0
-
-
-    def isPrime(n: int) -> bool:
-        """
-        checks if a number is a prime numnber: bool
-        """
-        for i in range(2, n):
-            if n % i == 0:
-                return False
-        return True
-
-    prime_numbers = []
-    prime_factors = []
-    quotient = n
-    for i in range(2, n):
-        if isPrime(i):
-            prime_numbers.append(i)
-    while not isPrime(quotient):
-        if quotient % min(prime_numbers) == 0:
-            quotient = quotient//min(prime_numbers)
-            prime_factors.append(min(prime_numbers))
-        else:
-            prime_numbers.pop(prime_numbers.index(min(prime_numbers)))
-    prime_factors.append(quotient)
-    return sum(prime_factors)
+    ops, root = 0, 2
+    while root <= n:
+        # if n evenly divides by root
+        if n % root == 0:
+            # total even-divisions by root = total operations
+            ops += root
+            # set n to the remainder
+            n = n / root
+            # reduce root to find remaining smaller vals that evenly-divide n
+            root -= 1
+        # increment root until it evenly-divides n
+        root += 1
+    return ops
