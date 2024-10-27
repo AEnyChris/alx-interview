@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 """
-log parsing: reads lines of logs in realtime from stdin 
+log parsing: reads lines of logs in realtime from stdin
 and process it to return specific stats
 """
 import sys
 import re
 import signal
 
-################ INITIALIZATION ##############
+""" INITIALIZATION """
 # ---- Define variables and helper function
 status_tracker = {
                 '200': 0,
@@ -24,8 +24,9 @@ sum_file_size = 0
 date_pattern = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6}\]'
 ip_pattern = '((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?){4}'
 code_pattern = '\d{3}'
-request ='("GET /projects/260 HTTP/1.1")'
+request = '("GET /projects/260 HTTP/1.1")'
 log_pattern = f'{ip_pattern} - {date_pattern} {request} {code_pattern} \d+'
+
 
 def display(file_size, status_tracker):
     '''
@@ -37,32 +38,34 @@ def display(file_size, status_tracker):
         if value != 0:
             print(f'{code}: {value}')
 
-#---- Define Signal handling of Keyboard interrupt
+# ---- Define Signal handling of Keyboard interrupt
+
+
 def signal_handler(signum, frame):
     '''signal handler for keyboard interrupt: displays stats'''
     display(sum_file_size, status_tracker)
 
+
 signal.signal(signal.SIGINT, signal_handler)
 
-##########################################
 
-############## MAIN PROCESS #################
+''' MAIN PROCESS '''
 try:
-    res = sys.stdin # read from stdin
+    res = sys.stdin  # read from stdin
     for line in res:
-        #--- Validate line
+        # --- Validate line
         # print(f"{line}")
         if not re.match(log_pattern, line):
             continue
 
-        #--- Processing line
+        # --- Processing line
         split_line = line.split()
         status_code = split_line[-2]
 
         try:
             if status_code in status_tracker.keys():
                 status_tracker[status_code] += 1
-        except:
+        except Exception:
             continue
 
         file_size = split_line[-1]
@@ -70,9 +73,9 @@ try:
 
         count += 1
 
-        #--- Display stats
+        # --- Display stats
         if count == 10:
-            display(sum_file_size, status_tracker) 
+            display(sum_file_size, status_tracker)
             count = 0
 except KeyboardInterrupt:
     display(sum_file_size, status_tracker)
