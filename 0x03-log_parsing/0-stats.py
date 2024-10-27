@@ -5,7 +5,6 @@ and process it to return specific stats
 """
 import sys
 import re
-import signal
 
 """ INITIALIZATION """
 # ---- Define variables and helper function
@@ -38,16 +37,6 @@ def display(file_size, status_tracker):
         if value != 0:
             print(f'{code}: {value}')
 
-# ---- Define Signal handling of Keyboard interrupt
-
-
-def signal_handler(signum, frame):
-    '''signal handler for keyboard interrupt: displays stats'''
-    display(sum_file_size, status_tracker)
-
-
-signal.signal(signal.SIGINT, signal_handler)
-
 
 ''' MAIN PROCESS '''
 try:
@@ -77,5 +66,7 @@ try:
         if count == 10:
             display(sum_file_size, status_tracker)
             count = 0
-except KeyboardInterrupt:
+except KeyboardInterrupt as e:
+    print(e)
+finally:
     display(sum_file_size, status_tracker)
