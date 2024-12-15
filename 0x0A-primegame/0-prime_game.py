@@ -10,6 +10,8 @@ def isWinner(x, nums):
         }
 
     for n in nums[:x]:
+        if type(n) != int:
+            return None
         seq = [i for i in range(1, n+1)]
         player = 'Maria'
         p = 2
@@ -30,13 +32,12 @@ def isWinner(x, nums):
     if scores.get('Ben') == scores.get('Maria'):
         return None
     if scores.get('Ben') > scores.get('Maria'):
-        res = 'Ben'
+        return 'Ben'
     else:
-        res = 'Maria'
-    return res
+        return 'Maria'
 
 
 if __name__ == '__main__':
-    x = 6
-    nums = [2, 5, 1, 4, 3, 30]
+    x = 1000
+    nums = [...]
     print(isWinner(x, nums))
